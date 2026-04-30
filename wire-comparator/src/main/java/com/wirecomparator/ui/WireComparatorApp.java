@@ -261,7 +261,7 @@ public class WireComparatorApp extends Application {
                         .resolve("wire_comparison_" + timestamp + ".xlsx");
 
                 ExcelExporter exporter = new ExcelExporter();
-                exporter.export(results, outputPath);
+                exporter.export(results, outputPath, selectedFile1.getName(), selectedFile2.getName());
 
                 return outputPath;
             }
