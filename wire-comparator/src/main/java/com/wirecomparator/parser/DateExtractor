@@ -1,0 +1,38 @@
+package com.wirecomparator.parser;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+public class DateExtractor {
+
+    private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+    public static String extractDate(String referenceNumber) {
+        if (referenceNumber == null || referenceNumber.isBlank()) return "Unknown";
+
+        String ref = referenceNumber.replaceAll("\\s+", "");
+        if (ref.length() < 8) return "Unknown";
+
+        String prefix = ref.substring(0, 8);
+        LocalDate date = tryParse(prefix);
+        if (date != null) return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+        String suffix = ref.substring(ref.length() - 8);
+        date = tryParse(suffix);
+        if (date != null) return date.format(DateTimeFormatter.ISO_LOCAL_DATE);
+
+        return "Unknown";
+    }
+
+    private static LocalDate tryParse(String s) {
+        if (!s.matches("\\d{8}")) return null;
+        try {
+            LocalDate d = LocalDate.parse(s, FMT);
+            if (d.getYear() < 2000 || d.getYear() > 2100) return null;
+            return d;
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+}
